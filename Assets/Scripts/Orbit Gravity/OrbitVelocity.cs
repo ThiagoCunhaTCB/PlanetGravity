@@ -6,6 +6,7 @@ public class OrbitVelocity : MonoBehaviour
 {
     public Rigidbody orbitObj;
     public bool retrograde = false;
+    public float boost = 1; //TODO: Calculate adicional boost
 
     private Rigidbody rb;
     private float orbitVelocity;
@@ -28,15 +29,15 @@ public class OrbitVelocity : MonoBehaviour
 
         // Orbital velocity
         // Mathf.Pow(d * g, 0.5f)
-        orbitVelocity = Mathf.Pow(distance * forceMagnitude, 0.5f); // gForce = 0 on awake
+        orbitVelocity = Mathf.Pow(distance * forceMagnitude, 0.5f);
 
         Debug.Log("forceMagnitude: " + forceMagnitude);
 
         Vector3 tangent;
         if (retrograde)
-            tangent = new Vector3(1 * orbitVelocity, 0, 0);
+            tangent = new Vector3(1 * orbitVelocity * boost, 0, 0);
         else
-            tangent = new Vector3(-1 * orbitVelocity, 0, 0);
+            tangent = new Vector3(-1 * orbitVelocity * boost, 0, 0);
         rb.AddForce(tangent, ForceMode.Impulse);
     }
 }

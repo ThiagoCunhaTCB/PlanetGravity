@@ -14,7 +14,19 @@ public class GravityAttractor : MonoBehaviour
 
         // Apply downwards gravity to body
         body.AddForce(gravityUp * gravity);
-        // Allign bodies up axis with the centre of planet
+        // Align bodies up axis with the centre of planet
         body.rotation = Quaternion.FromToRotation(localUp, gravityUp) * body.rotation;
+    }
+
+    public void React(Rigidbody body)
+    {
+        Vector3 reactDir = (transform.position - body.position).normalized;
+        GetComponent<Rigidbody>().AddForce(reactDir * gravity);
+    }
+
+    public void JumpReact(FirstPersonController body)
+    {
+        Vector3 jumpDir = (transform.position - body.transform.position).normalized;
+        GetComponent<Rigidbody>().AddForce(jumpDir * body.jumpForce);
     }
 }

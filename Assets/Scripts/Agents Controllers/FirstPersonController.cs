@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[RequireComponent(typeof(GravityBody))]
+// [RequireComponent(typeof(GravityBody))]
 public class FirstPersonController : MonoBehaviour
 {
 
@@ -9,11 +9,14 @@ public class FirstPersonController : MonoBehaviour
     public float mouseSensitivityX = 1;
     public float mouseSensitivityY = 1;
     public float walkSpeed = 6;
-    public float jumpForce = 220;
+    public float jumpForce = 10;
     public LayerMask groundedMask;
 
+    //public GravityAttractor planet;
+    public Attractor planet;
+
     // System vars
-    bool grounded;
+    public bool grounded;
     Vector3 moveAmount;
     Vector3 smoothMoveVelocity;
     float verticalLookRotation;
@@ -52,6 +55,7 @@ public class FirstPersonController : MonoBehaviour
             if (grounded)
             {
                 rigidbody.AddForce(transform.up * jumpForce);
+                //planet.JumpReact(this);
             }
         }
 
@@ -74,6 +78,19 @@ public class FirstPersonController : MonoBehaviour
     {
         // Apply movement to rigidbody
         Vector3 localMove = transform.TransformDirection(moveAmount) * Time.fixedDeltaTime;
+        AlignToPlanet(planet.rb);   //TODO: Apply unique alignment 
         rigidbody.MovePosition(rigidbody.position + localMove);
+    }
+
+
+
+
+    public void AlignToPlanet(Rigidbody body)
+    {
+        Vector3 gravityUp = (transform.position - body.position).normalized;
+        Vector3 localUp = transform.up;
+
+        // Allign bodies up axis with the centre of planet
+        transform.rotation = Quaternion.FromToRotation(localUp, gravityUp) * transform.rotation;
     }
 }
